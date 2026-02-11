@@ -1,5 +1,6 @@
 const button = document.getElementById("btn") as HTMLButtonElement;
-const cityInput = document.getElementById("citySelect") as HTMLInputElement;
+const cityInput = document.getElementById("cityInput") as HTMLInputElement;
+const suggestionsEl = document.getElementById("suggestions") as HTMLDivElement;
 
 const tempEl = document.getElementById("temperature") as HTMLSpanElement;
 const windEl = document.getElementById("windspeed") as HTMLSpanElement;
@@ -7,7 +8,46 @@ const weatherCodeEl = document.getElementById("weathercode") as HTMLSpanElement;
 const weatherIconEl = document.getElementById("weathericon") as HTMLSpanElement;
 const messageEl = document.getElementById("message") as HTMLParagraphElement;
 
+let selectedCity: { latitude: number; longitude: number } | null = null;
 
+/* 🔹 Auto Suggestion */
+cityInput.addEventListener("input", async () => {
+  const query = cityInput.value.trim();
+
+  selectedCity = null; // reset on new typing
+
+  if (query.length < 2) {
+    suggestionsEl.innerHTML = "";
+    return;
+  }
+
+  const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5`;
+
+  const response = await fetch(geoUrl);
+  const data = await response.json();
+
+  suggestionsEl.innerHTML = "";
+
+  if (!data.results) return;
+
+  data.results.forEach((place: any) => {
+    const div = document.createElement("div");
+    div.textContent = `${place.name}, ${place.country}`;
+
+    div.addEventListener("click", () => {
+      cityInput.value = `${place.name}, ${place.country}`;
+      selectedCity = {
+        latitude: place.latitude,
+        longitude: place.longitude,
+      };
+      suggestionsEl.innerHTML = "";
+    });
+
+    suggestionsEl.appendChild(div);
+  });
+});
+
+/* 🔹 Weather Description */
 function getWeatherDescription(code: number): string {
   if (code === 0) return "Nirmal Aakash";
   if (code === 1 || code === 2) return "Baadalein";
@@ -18,6 +58,7 @@ function getWeatherDescription(code: number): string {
   return "Agyaat";
 }
 
+/* 🔹 Weather Icon */
 function getWeatherIcon(code: number): string {
   if (code === 0) return "☀️";
   if (code === 1 || code === 2) return "🌤";
@@ -28,38 +69,18 @@ function getWeatherIcon(code: number): string {
   return "🌍";
 }
 
-async function getCoordinates(city: string) {
-  const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city}`;
-
-  const response = await fetch(geoUrl);
-  const data = await response.json();
-
-  if (!data.results || data.results.length === 0) {
-    throw new Error("Shahar nahi mili...");
-  }
-
-  return {
-    latitude: data.results[0].latitude,
-    longitude: data.results[0].longitude,
-  };
-}
-
+/* 🔹 Main Weather Fetch */
 async function getWeather() {
-  const city = cityInput.value.trim();
 
-  if (!city) {
-    messageEl.textContent = "Kripya Shahar ka naam likhe...";
+  if (!selectedCity) {
+    messageEl.textContent = "Kripya list se shahar chune.";
     return;
   }
 
   try {
-    messageEl.textContent = "Sthan Prapt Kiyaa jaa raha hai....";
+    messageEl.textContent = "Purvanuman kiya ja raha hai...";
 
-    const coords = await getCoordinates(city);
-
-    messageEl.textContent = "Purvanuman Kiya Jaa raha hai....";
-
-    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current_weather=true`;
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${selectedCity.latitude}&longitude=${selectedCity.longitude}&current_weather=true`;
 
     const weatherResponse = await fetch(weatherUrl);
     const weatherData = await weatherResponse.json();
@@ -73,8 +94,8 @@ async function getWeather() {
 
     messageEl.textContent = "";
 
-  } catch (error) {
-    messageEl.textContent = "Shahar ke upyukt Data prapt nahi hui....";
+  } catch {
+    messageEl.textContent = "Kuch galat ho gaya. Dobara prayas karein.";
   }
 }
 

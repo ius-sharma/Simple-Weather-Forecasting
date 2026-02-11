@@ -34,13 +34,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var _this = this;
 var button = document.getElementById("btn");
-var cityInput = document.getElementById("citySelect");
+var cityInput = document.getElementById("cityInput");
+var suggestionsEl = document.getElementById("suggestions");
 var tempEl = document.getElementById("temperature");
 var windEl = document.getElementById("windspeed");
 var weatherCodeEl = document.getElementById("weathercode");
 var weatherIconEl = document.getElementById("weathericon");
 var messageEl = document.getElementById("message");
+var selectedCity = null;
+/* 🔹 Auto Suggestion */
+cityInput.addEventListener("input", function () { return __awaiter(_this, void 0, void 0, function () {
+    var query, geoUrl, response, data;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                query = cityInput.value.trim();
+                selectedCity = null; // reset on new typing
+                if (query.length < 2) {
+                    suggestionsEl.innerHTML = "";
+                    return [2 /*return*/];
+                }
+                geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=".concat(query, "&count=5");
+                return [4 /*yield*/, fetch(geoUrl)];
+            case 1:
+                response = _a.sent();
+                return [4 /*yield*/, response.json()];
+            case 2:
+                data = _a.sent();
+                suggestionsEl.innerHTML = "";
+                if (!data.results)
+                    return [2 /*return*/];
+                data.results.forEach(function (place) {
+                    var div = document.createElement("div");
+                    div.textContent = "".concat(place.name, ", ").concat(place.country);
+                    div.addEventListener("click", function () {
+                        cityInput.value = "".concat(place.name, ", ").concat(place.country);
+                        selectedCity = {
+                            latitude: place.latitude,
+                            longitude: place.longitude,
+                        };
+                        suggestionsEl.innerHTML = "";
+                    });
+                    suggestionsEl.appendChild(div);
+                });
+                return [2 /*return*/];
+        }
+    });
+}); });
+/* 🔹 Weather Description */
 function getWeatherDescription(code) {
     if (code === 0)
         return "Nirmal Aakash";
@@ -56,6 +99,7 @@ function getWeatherDescription(code) {
         return "Aandhee Toofan";
     return "Agyaat";
 }
+/* 🔹 Weather Icon */
 function getWeatherIcon(code) {
     if (code === 0)
         return "☀️";
@@ -71,68 +115,40 @@ function getWeatherIcon(code) {
         return "⛈";
     return "🌍";
 }
-function getCoordinates(city) {
-    return __awaiter(this, void 0, void 0, function () {
-        var geoUrl, response, data;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=".concat(city);
-                    return [4 /*yield*/, fetch(geoUrl)];
-                case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, response.json()];
-                case 2:
-                    data = _a.sent();
-                    if (!data.results || data.results.length === 0) {
-                        throw new Error("Shahar nahi mili...");
-                    }
-                    return [2 /*return*/, {
-                            latitude: data.results[0].latitude,
-                            longitude: data.results[0].longitude,
-                        }];
-            }
-        });
-    });
-}
+/* 🔹 Main Weather Fetch */
 function getWeather() {
     return __awaiter(this, void 0, void 0, function () {
-        var city, coords, weatherUrl, weatherResponse, weatherData, weather, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var weatherUrl, weatherResponse, weatherData, weather, _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    city = cityInput.value.trim();
-                    if (!city) {
-                        messageEl.textContent = "Kripya Shahar ka naam likhe...";
+                    if (!selectedCity) {
+                        messageEl.textContent = "Kripya list se shahar chune.";
                         return [2 /*return*/];
                     }
-                    _a.label = 1;
+                    _b.label = 1;
                 case 1:
-                    _a.trys.push([1, 5, , 6]);
-                    messageEl.textContent = "Sthan Prapt Kiyaa jaa raha hai....";
-                    return [4 /*yield*/, getCoordinates(city)];
-                case 2:
-                    coords = _a.sent();
-                    messageEl.textContent = "Purvanuman Kiya Jaa raha hai....";
-                    weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=".concat(coords.latitude, "&longitude=").concat(coords.longitude, "&current_weather=true");
+                    _b.trys.push([1, 4, , 5]);
+                    messageEl.textContent = "Purvanuman kiya ja raha hai...";
+                    weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=".concat(selectedCity.latitude, "&longitude=").concat(selectedCity.longitude, "&current_weather=true");
                     return [4 /*yield*/, fetch(weatherUrl)];
-                case 3:
-                    weatherResponse = _a.sent();
+                case 2:
+                    weatherResponse = _b.sent();
                     return [4 /*yield*/, weatherResponse.json()];
-                case 4:
-                    weatherData = _a.sent();
+                case 3:
+                    weatherData = _b.sent();
                     weather = weatherData.current_weather;
                     tempEl.textContent = "".concat(weather.temperature, " \u00B0C");
                     windEl.textContent = "".concat(weather.windspeed, " km/h");
                     weatherCodeEl.textContent = getWeatherDescription(weather.weathercode);
                     weatherIconEl.textContent = getWeatherIcon(weather.weathercode);
                     messageEl.textContent = "";
-                    return [3 /*break*/, 6];
-                case 5:
-                    error_1 = _a.sent();
-                    messageEl.textContent = "Shahar ke upyukt Data prapt nahi hui....";
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 4:
+                    _a = _b.sent();
+                    messageEl.textContent = "Kuch galat ho gaya. Dobara prayas karein.";
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });

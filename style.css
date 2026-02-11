@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cookie&family=Cutive+Mono&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');
 
 * {
   margin: 0;
@@ -16,54 +15,75 @@ body {
   background: linear-gradient(45deg, #2fff00, #a9ff6f);
 }
 
+/* 🔹 Card */
 .weather-card {
   display: flex;
   width: 700px;
-  background: transparent;
-  border: 0.7px solid #aeff8f;
   border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(20, 60, 0, 0.216);
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 15px 35px rgba(0, 60, 0, 0.25);
+  transition: 0.3s ease;
 }
 
-.left-panel {
-  flex: 1;
-  padding: 30px;
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.weather-card:hover {
+  transform: scale(1.02);
 }
 
+/* 🔹 Panels */
+.left-panel,
 .right-panel {
   flex: 1;
   padding: 30px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 15px;
 }
 
-.citySelect{
-  padding: 10px;
-  background: transparent;
-  border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(20, 60, 0, 0.216);
-  border: 0.5px solid #b9ff93;
+/* 🔹 Input */
+.search-container {
+  position: relative;
 }
 
-button {
+#cityInput {
+  width: 100%;
   padding: 10px;
-  background: transparent;
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(20, 60, 0, 0.216);
-  border: 0.5px solid #b9ff93;
+  border: 1px solid #9aff66;
+  background: rgba(255,255,255,0.3);
+  outline: none;
 }
 
+/* 🔹 Suggestions */
+.suggestions {
+  position: absolute;
+  top: 42px;
+  width: 100%;
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  z-index: 10;
+}
 
+.suggestions div {
+  padding: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.suggestions div:hover {
+  background: #d4ffb0;
+}
+
+/* 🔹 Button */
 button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
   background: #159e00;
-  box-shadow: 0 10px 25px rgba(20, 60, 0, 0.216);
   color: white;
   cursor: pointer;
   transition: 0.3s;
@@ -73,7 +93,17 @@ button:hover {
   background: #22ff00;
 }
 
+/* 🔹 Message */
 #message {
-  color: rgb(255, 0, 0);
+  color: red;
+  font-size: 14px;
 }
 
+/* 🔹 Text Styling */
+h2, h3 {
+  font-weight: 600;
+}
+
+p {
+  font-size: 16px;
+}
