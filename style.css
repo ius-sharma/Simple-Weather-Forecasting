@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Cookie&family=Cutive+Mono&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Playfair Display", serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(45deg, #2fff00, #a9ff6f);
+}
+
+.weather-card {
+  display: flex;
+  width: 700px;
+  background: transparent;
+  border: 0.7px solid #aeff8f;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(20, 60, 0, 0.216);
+}
+
+.left-panel {
+  flex: 1;
+  padding: 30px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.right-panel {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+}
+
+.citySelect{
+  padding: 10px;
+  background: transparent;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(20, 60, 0, 0.216);
+  border: 0.5px solid #b9ff93;
+}
+
+button {
+  padding: 10px;
+  background: transparent;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(20, 60, 0, 0.216);
+  border: 0.5px solid #b9ff93;
+}
+
+
+button {
+  background: #159e00;
+  box-shadow: 0 10px 25px rgba(20, 60, 0, 0.216);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #22ff00;
+}
+
+#message {
+  color: rgb(255, 0, 0);
+}
+
