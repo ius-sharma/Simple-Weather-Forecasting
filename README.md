@@ -13,7 +13,7 @@ This project demonstrates real-time API integration, async/await handling, dynam
 - 🌦 Live weather data via Open-Meteo API
 - 🎨 Weather-based UI updates
 - ⚡ Async/Await with proper error handling
-- 💎 Clean responsive dashboard layout
+- 💎 Clean responsive dashboard layout.
 
 ---
 
