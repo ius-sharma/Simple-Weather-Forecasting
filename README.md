@@ -33,7 +33,3 @@ This project demonstrates real-time API integration, async/await handling, dynam
 - Modular TypeScript structure
 - DOM manipulation with type safety
 - Error handling & loading state management
-
----
-
-Built for learning.
