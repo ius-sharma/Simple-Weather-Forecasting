@@ -32,4 +32,3 @@ This project demonstrates real-time API integration, async/await handling, dynam
 - API chaining (Geocoding → Weather API)
 - Modular TypeScript structure
 - DOM manipulation with type safety
-- Error handling & loading state management
